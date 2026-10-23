@@ -1,12 +1,17 @@
-export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        Hello World!
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        Bhavya Jain | 2025
-      </footer>
-    </div>
-  );
+import {aboutData} from "@/sanity/db";
+
+export default async function Home() {
+    const data = await aboutData()
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+    return (
+        <div
+            className="font-sans grid grid-rows-[20px_1fr_20px] n justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
+            <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
+                {data.text}
+            </main>
+            <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
+                Bhavya Jain | 2025
+            </footer>
+        </div>
+    );
 }

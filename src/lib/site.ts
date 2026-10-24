@@ -1,14 +1,20 @@
 import type { LucideIcon } from "lucide-react";
 import {
   Briefcase,
+  Code2,
   FileText,
-  FolderGit2,
   Home,
   Mail,
-  Sparkles,
+  Wrench,
 } from "lucide-react";
 
-export type TileColor = "lime" | "purple" | "orange";
+export type TileColor =
+  | "purple"
+  | "orange"
+  | "green"
+  | "blue"
+  | "yellow"
+  | "lime";
 
 export interface NavItem {
   readonly title: string;
@@ -22,37 +28,37 @@ export const NAV_ITEMS: readonly NavItem[] = [
     title: "Home",
     href: "/",
     icon: Home,
-    accentColor: "orange",
+    accentColor: "purple",
   },
   {
     title: "Experience",
     href: "/experience",
     icon: Briefcase,
-    accentColor: "purple",
+    accentColor: "orange",
   },
   {
     title: "Projects",
     href: "/projects",
-    icon: FolderGit2,
-    accentColor: "lime",
+    icon: Code2,
+    accentColor: "green",
   },
   {
     title: "Skills",
     href: "/skills",
-    icon: Sparkles,
-    accentColor: "lime",
+    icon: Wrench,
+    accentColor: "blue",
   },
   {
     title: "Contact",
     href: "/contact",
     icon: Mail,
-    accentColor: "orange",
+    accentColor: "yellow",
   },
   {
     title: "Resume",
     href: "/resume",
     icon: FileText,
-    accentColor: "purple",
+    accentColor: "lime",
   },
 ] as const;
 

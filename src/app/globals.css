@@ -3,24 +3,104 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* Color Tokens */
+  --color-orange: #ff6d38;
+  --color-purple: #7a78ff;
+  --color-lime: #c7ff69;
+  --color-white: #fdf9f0;
+  --color-black: #141414;
+  --color-yellow: #ffc412;
+  --color-green: #00a652;
+  --color-blue: #478bff;
+  --color-yellow-300: #ffeeba;
+  --color-orange-300: #ffcdba;
+  --color-blue-300: #b9ddfd;
+  --color-purple-300: #ccf;
+  --color-purple-100: #e7ebff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: var(--color-black);
+    --foreground: var(--color-white);
+  }
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Fonts */
+  --font-sans: var(--font-ibm-plex-sans-arabic);
+  --font-anton: var(--font-anton);
+  --font-anton-sc: var(--font-anton-sc);
+
+  /* Tracking / Letter Spacing */
+  --tracking-wide-2: 0.02em;
+  --tracking-wide-4: 0.04em;
+
+  /* Colors */
+  --color-orange: var(--color-orange);
+  --color-purple: var(--color-purple);
+  --color-lime: var(--color-lime);
+  --color-white: var(--color-white);
+  --color-black: var(--color-black);
+  --color-yellow: var(--color-yellow);
+  --color-green: var(--color-green);
+  --color-blue: var(--color-blue);
+  --color-yellow-300: var(--color-yellow-300);
+  --color-orange-300: var(--color-orange-300);
+  --color-blue-300: var(--color-blue-300);
+  --color-purple-300: var(--color-purple-300);
+  --color-purple-100: var(--color-purple-100);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), sans-serif;
 }
+
+h1 {
+  font-family: var(--font-anton), sans-serif;
+  font-weight: 400;
+  font-size: 3rem;
+  letter-spacing: 0.04em;
+}
+
+h2 {
+  font-weight: 700;
+  font-size: 1.75rem;
+}
+
+h3 {
+  font-weight: 500;
+  font-size: 1.25rem;
+}
+
+p {
+  font-weight: 400;
+  font-size: 1.25rem;
+  letter-spacing: 0.02em;
+}
+
+strong, b {
+  font-family: var(--font-anton-sc), sans-serif;
+  font-weight: 400;
+  font-size: 1.25rem;
+}
+
+u, ins {
+  font-family: var(--font-anton-sc), sans-serif;
+  font-weight: 400;
+  font-size: 1.25rem;
+  text-decoration: underline;
+}
+
+small, caption {
+  font-weight: 500;
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+}
+

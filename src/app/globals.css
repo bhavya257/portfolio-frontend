@@ -54,12 +54,32 @@
   --color-blue-300: var(--color-blue-300);
   --color-purple-300: var(--color-purple-300);
   --color-purple-100: var(--color-purple-100);
+
+  /* Radii */
+  --radius-tile: 0.75rem;
+  --radius-card: 1.5rem;
+
+  /* Layout */
+  --container-content: 45rem;
+  --spacing-dock: 4.5rem;
+
+  /* Motion */
+  --ease-snap: cubic-bezier(0.2, 0, 0, 1);
+  --ease-out-quick: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-instant: 90ms;
+  --duration-fast: 160ms;
+  --duration-base: 240ms;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), sans-serif;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-purple);
+  outline-offset: 3px;
 }
 
 h1 {

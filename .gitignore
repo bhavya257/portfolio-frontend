@@ -17,9 +17,11 @@
 
 # production
 /build
+.turbo
 
 # misc
 .DS_Store
+Thumbs.db
 *.pem
 
 # debug
@@ -38,6 +40,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+sanity.types.ts
 
 # IDE settings
 .idea
+.vscode
+
+# next-agents-md
+AGENTS.md
+.next-docs/

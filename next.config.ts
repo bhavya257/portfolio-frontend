@@ -1,7 +1,21 @@
 import type { NextConfig } from "next";
 
+const projectId = process.env.SANITY_API_PROJECT_ID;
+const dataset = process.env.SANITY_API_DATASET;
+
 const nextConfig: NextConfig = {
-  /* config options here */
+  async rewrites() {
+    return [
+      {
+        source: "/media/:path*",
+        destination: `https://cdn.sanity.io/images/${projectId}/${dataset}/:path*`,
+      },
+      {
+        source: "/files/:path*",
+        destination: `https://cdn.sanity.io/files/${projectId}/${dataset}/:path*`,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

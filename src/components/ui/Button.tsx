@@ -9,7 +9,7 @@ import { cn } from "@/lib/cn";
 import { triggerTick } from "@/lib/haptics";
 
 export const buttonVariants = cva(
-  "group relative overflow-hidden inline-flex items-center justify-center font-medium select-none cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-black)] disabled:opacity-50 disabled:pointer-events-none disabled:cursor-not-allowed",
+  "group relative overflow-hidden inline-flex items-center justify-center select-none cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-black)] disabled:opacity-50 disabled:pointer-events-none disabled:cursor-not-allowed",
   {
     variants: {
       variant: {
@@ -19,9 +19,9 @@ export const buttonVariants = cva(
         ghost: "border border-transparent bg-transparent text-white hover:bg-white/10",
       },
       size: {
-        sm: "h-9 px-3.5 text-xs gap-1.5 rounded-lg",
-        md: "h-11 px-5 text-sm gap-2 rounded-xl",
-        lg: "h-13 px-7 text-base gap-2.5 rounded-2xl",
+        sm: "h-9 px-2.5 gap-1.5 rounded-lg",
+        md: "h-11 px-3.5 gap-2 rounded-xl",
+        lg: "h-13 px-5 gap-2.5 rounded-2xl",
         iconSm: "h-9 w-9 p-0 rounded-lg",
         icon: "h-11 w-11 p-0 rounded-xl",
         iconLg: "h-13 w-13 p-0 rounded-2xl",
@@ -139,7 +139,7 @@ export function Button({
             className="shrink-0"
           />
         )}
-        {children}
+        {children && <u>{children}</u>}
         {IconEnd && (
           <IconEnd
             size={iconSize}

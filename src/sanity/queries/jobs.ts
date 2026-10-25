@@ -44,3 +44,21 @@ export const JOBS_QUERY = defineQuery(`
     }
   }
 `)
+
+export const JOBS_PREVIEW_QUERY = defineQuery(`
+  *[_type == "job"] | order(startDate desc)[0...2] {
+    _id,
+    _type,
+    title,
+    company,
+    website {
+      title,
+      url
+    },
+    startDate,
+    endDate,
+    customEndDate,
+    description
+  }
+`)
+

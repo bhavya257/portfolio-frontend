@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Anton, Anton_SC, IBM_Plex_Sans_Arabic } from "next/font/google";
+import { Navbar } from "@/components/layout/Navbar";
+import { Dock } from "@/components/layout/Dock";
 import "./globals.css";
 
 const anton = Anton({
@@ -36,9 +38,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${anton.variable} ${antonSc.variable} ${ibmPlexSansArabic.variable} antialiased`}
+        className={`${anton.variable} ${antonSc.variable} ${ibmPlexSansArabic.variable} antialiased bg-[var(--color-black)] text-[var(--color-white)] min-h-screen flex flex-col`}
       >
-        {children}
+        <Navbar />
+        <main id="content" className="flex-1 pb-24 md:pb-0">
+          {children}
+        </main>
+        <Dock />
       </body>
     </html>
   );

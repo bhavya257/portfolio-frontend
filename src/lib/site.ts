@@ -99,19 +99,20 @@ export function getDockItems(pathname: string): readonly NavItem[] {
   const home = NAV_ITEMS[0];
   const experience = NAV_ITEMS[1];
   const projects = NAV_ITEMS[2];
+  const skills = NAV_ITEMS[3];
   const contact = NAV_ITEMS[4];
   const resume = NAV_ITEMS[5];
 
   if (pathname === "/") {
-    return [projects, experience, contact];
-  }
-
-  if (pathname.startsWith("/projects")) {
-    return [home, experience, contact];
+    return [experience, projects, contact];
   }
 
   if (pathname.startsWith("/experience")) {
     return [home, projects, contact];
+  }
+
+  if (pathname.startsWith("/projects")) {
+    return [home, skills, contact];
   }
 
   if (pathname.startsWith("/skills")) {
@@ -126,7 +127,7 @@ export function getDockItems(pathname: string): readonly NavItem[] {
     return [home, projects, contact];
   }
 
-  return [home, projects, contact];
+  return [experience, projects, contact];
 }
 
 /**

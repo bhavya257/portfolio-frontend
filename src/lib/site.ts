@@ -21,6 +21,9 @@ export interface NavItem {
   readonly href: string;
   readonly icon: LucideIcon;
   readonly accentColor: TileColor;
+  readonly textClass: string;
+  readonly tileClass: string;
+  readonly sweepClass: string;
 }
 
 export const NAV_ITEMS: readonly NavItem[] = [
@@ -29,36 +32,54 @@ export const NAV_ITEMS: readonly NavItem[] = [
     href: "/",
     icon: Home,
     accentColor: "purple",
+    textClass: "text-purple",
+    tileClass: "bg-purple text-black border-transparent",
+    sweepClass: "bg-purple",
   },
   {
     title: "Experience",
     href: "/experience",
     icon: Briefcase,
     accentColor: "orange",
+    textClass: "text-orange",
+    tileClass: "bg-orange text-black border-transparent",
+    sweepClass: "bg-orange",
   },
   {
     title: "Projects",
     href: "/projects",
     icon: Code2,
     accentColor: "green",
+    textClass: "text-green",
+    tileClass: "bg-green text-black border-transparent",
+    sweepClass: "bg-green",
   },
   {
     title: "Skills",
     href: "/skills",
     icon: Wrench,
     accentColor: "blue",
+    textClass: "text-blue",
+    tileClass: "bg-blue text-black border-transparent",
+    sweepClass: "bg-blue",
   },
   {
     title: "Contact",
     href: "/contact",
     icon: Mail,
     accentColor: "yellow",
+    textClass: "text-yellow",
+    tileClass: "bg-yellow text-black border-transparent",
+    sweepClass: "bg-yellow",
   },
   {
     title: "Resume",
     href: "/resume",
     icon: FileText,
     accentColor: "lime",
+    textClass: "text-lime",
+    tileClass: "bg-lime text-black border-transparent",
+    sweepClass: "bg-lime",
   },
 ] as const;
 

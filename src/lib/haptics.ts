@@ -32,7 +32,7 @@ function getAudioContext(): AudioContext | null {
 /**
  * Plays a synthesized click tone via Web Audio.
  */
-function playSynthesizedTick(frequency = 1000, duration = 0.015, volume = 0.04): void {
+function playSynthesizedTick(frequency = 1100, duration = 0.02, volume = 0.65): void {
   if (isAudioMuted) {
     return;
   }
@@ -47,12 +47,12 @@ function playSynthesizedTick(frequency = 1000, duration = 0.015, volume = 0.04):
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
 
-    osc.type = "sine";
+    osc.type = "triangle";
     osc.frequency.setValueAtTime(frequency, now);
-    osc.frequency.exponentialRampToValueAtTime(120, now + duration);
+    osc.frequency.exponentialRampToValueAtTime(160, now + duration);
 
     gain.gain.setValueAtTime(volume, now);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
 
     osc.connect(gain);
     gain.connect(ctx.destination);
@@ -85,24 +85,24 @@ function vibrate(pattern: number | number[]): void {
  * Light tactile feedback for button clicks, dock shortcuts, and tab switches.
  */
 export function triggerTick(): void {
-  vibrate(10);
-  playSynthesizedTick(1100, 0.012, 0.035);
+  vibrate(12);
+  playSynthesizedTick(1200, 0.02, 0.65);
 }
 
 /**
  * Slightly firmer tactile feedback for sticky section snapping and modals.
  */
 export function triggerSnap(): void {
-  vibrate(16);
-  playSynthesizedTick(800, 0.018, 0.045);
+  vibrate(18);
+  playSynthesizedTick(850, 0.028, 0.75);
 }
 
 /**
  * Double-pulse feedback for successful actions like copying text or submitting forms.
  */
 export function triggerSuccess(): void {
-  vibrate([10, 40, 15]);
-  playSynthesizedTick(1200, 0.02, 0.04);
+  vibrate([12, 40, 16]);
+  playSynthesizedTick(1300, 0.025, 0.70);
 }
 
 /**

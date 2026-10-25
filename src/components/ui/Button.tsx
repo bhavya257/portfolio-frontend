@@ -1,12 +1,16 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 import { motion, type HTMLMotionProps } from "motion/react";
 import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { triggerTick } from "@/lib/haptics";
+
+const MotionLink = motion.create(Link);
 
 export const buttonVariants = cva(
   "group relative overflow-hidden inline-flex items-center justify-center select-none cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-black)] disabled:opacity-50 disabled:pointer-events-none disabled:cursor-not-allowed",
@@ -37,6 +41,9 @@ export const buttonVariants = cva(
 export interface ButtonProps
   extends Omit<HTMLMotionProps<"button">, "children">,
     VariantProps<typeof buttonVariants> {
+  href?: string;
+  prefetch?: boolean;
+  underline?: boolean;
   asChild?: boolean;
   haptic?: boolean;
   isActive?: boolean;
@@ -51,6 +58,9 @@ export function Button({
   className,
   variant = "outline",
   size = "md",
+  href,
+  prefetch = true,
+  underline = true,
   asChild = false,
   haptic = true,
   isActive = false,
@@ -63,12 +73,21 @@ export function Button({
   children,
   ...props
 }: ButtonProps) {
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const router = useRouter();
+
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
     if (disabled) return;
     if (haptic) {
       triggerTick();
     }
-    onClick?.(e);
+    onClick?.(e as React.MouseEvent<HTMLButtonElement>);
+  };
+
+  const handlePointerEnter = (e: React.PointerEvent<HTMLButtonElement | HTMLAnchorElement>) => {
+    if (href && prefetch) {
+      router.prefetch(href);
+    }
+    props.onPointerEnter?.(e as React.PointerEvent<HTMLButtonElement>);
   };
 
   const isIconOnly = size === "icon" || size === "iconSm" || size === "iconLg";
@@ -98,21 +117,8 @@ export function Button({
     );
   }
 
-  return (
-    <motion.button
-      type="button"
-      disabled={disabled}
-      onClick={handleClick}
-      whileHover={!disabled ? { scale: 1.04 } : undefined}
-      whileTap={!disabled ? { scale: 0.92, filter: "brightness(0.75)" } : undefined}
-      transition={{ duration: 0.09, ease: [0.2, 0, 0, 1] }}
-      className={cn(
-        buttonVariants({ variant, size, className }),
-        isActive && "ring-2 ring-white ring-offset-2 ring-offset-[var(--color-black)] scale-105 brightness-110"
-      )}
-      {...props}
-    >
-      {/* Wipe fill from left to right on hover for sweep variants */}
+  const innerContent = (
+    <>
       {shouldSweep && (
         <span
           aria-hidden="true"
@@ -123,7 +129,6 @@ export function Button({
         />
       )}
 
-      {/* Button content inverting on hover */}
       <span
         className={cn(
           "relative z-10 inline-flex items-center justify-center gap-inherit transition-colors duration-150",
@@ -139,7 +144,7 @@ export function Button({
             className="shrink-0"
           />
         )}
-        {children && <u>{children}</u>}
+        {children && (underline ? <u>{children}</u> : <b>{children}</b>)}
         {IconEnd && (
           <IconEnd
             size={iconSize}
@@ -149,6 +154,44 @@ export function Button({
           />
         )}
       </span>
+    </>
+  );
+
+  if (href) {
+    return (
+      <MotionLink
+        href={href}
+        onClick={handleClick as unknown as React.MouseEventHandler<HTMLAnchorElement>}
+        onPointerEnter={handlePointerEnter as unknown as React.PointerEventHandler<HTMLAnchorElement>}
+        whileHover={!disabled ? { scale: 1.04 } : undefined}
+        whileTap={!disabled ? { scale: 0.92, filter: "brightness(0.75)" } : undefined}
+        transition={{ duration: 0.09, ease: [0.2, 0, 0, 1] }}
+        className={cn(
+          buttonVariants({ variant, size, className }),
+          isActive && "ring-2 ring-white ring-offset-2 ring-offset-[var(--color-black)] scale-105 brightness-110"
+        )}
+      >
+        {innerContent}
+      </MotionLink>
+    );
+  }
+
+  return (
+    <motion.button
+      type="button"
+      disabled={disabled}
+      onClick={handleClick}
+      onPointerEnter={handlePointerEnter}
+      whileHover={!disabled ? { scale: 1.04 } : undefined}
+      whileTap={!disabled ? { scale: 0.92, filter: "brightness(0.75)" } : undefined}
+      transition={{ duration: 0.09, ease: [0.2, 0, 0, 1] }}
+      className={cn(
+        buttonVariants({ variant, size, className }),
+        isActive && "ring-2 ring-white ring-offset-2 ring-offset-[var(--color-black)] scale-105 brightness-110"
+      )}
+      {...props}
+    >
+      {innerContent}
     </motion.button>
   );
 }

@@ -1,17 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import {
-  ArrowRight,
-  Briefcase,
-  Code2,
-  FileText,
-  Home as HomeIcon,
-  Mail,
-  Volume2,
-  Wrench,
-  X,
-} from "lucide-react";
+import { ArrowRight, Volume2, X } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import {
   Card,
@@ -20,32 +10,24 @@ import {
   CardDescription,
   CardFooter,
 } from "@/components/ui/Card";
-
-const TILES = [
-  { id: "home", icon: HomeIcon, className: "bg-purple text-black border-transparent", label: "Home" },
-  { id: "experience", icon: Briefcase, className: "bg-orange text-black border-transparent", label: "Experience" },
-  { id: "projects", icon: Code2, className: "bg-green text-black border-transparent", label: "Projects" },
-  { id: "skills", icon: Wrench, className: "bg-blue text-black border-transparent", label: "Skills" },
-  { id: "contact", icon: Mail, className: "bg-yellow text-black border-transparent", label: "Contact" },
-  { id: "resume", icon: FileText, className: "bg-lime text-black border-transparent", label: "Resume" },
-];
+import { NAV_ITEMS } from "@/lib/site";
 
 export function TileShowcase() {
-  const [selectedId, setSelectedId] = useState("home");
+  const [selectedHref, setSelectedHref] = useState("/");
 
   return (
     <div className="flex flex-col items-center gap-8 max-w-md w-full">
       <div className="flex flex-wrap items-center justify-center gap-3 p-3 bg-[#1c1c1c] rounded-2xl border border-white/10">
-        {TILES.map((tile) => (
+        {NAV_ITEMS.map((item) => (
           <Button
-            key={tile.id}
+            key={item.href}
             size="icon"
             variant="solid"
-            className={tile.className}
-            isActive={selectedId === tile.id}
-            onClick={() => setSelectedId(tile.id)}
-            aria-label={tile.label}
-            iconStart={tile.icon}
+            className={item.tileClass}
+            isActive={selectedHref === item.href}
+            onClick={() => setSelectedHref(item.href)}
+            aria-label={item.title}
+            iconStart={item.icon}
           />
         ))}
       </div>

@@ -2,21 +2,10 @@ import { PortableText } from "@portabletext/react";
 import { getAbout } from "@/sanity";
 import { SanityImage } from "@/components/ui/SanityImage";
 import { Card } from "@/components/ui/Card";
-import { Skeleton } from "@/components/ui/Skeleton";
+import { siteConfig } from "@/lib/site";
+import { AboutCardSkeleton } from "./AboutCardSkeleton";
 
-export function AboutCardSkeleton() {
-  return (
-    <Card className="w-full min-h-[calc(100dvh-var(--spacing-dock,5rem)-2rem)] sm:min-h-0 border-2 border-purple/40 rounded-[2rem] p-6 sm:p-8 flex flex-col items-start gap-6">
-      <Skeleton className="w-28 h-28 sm:w-32 sm:h-32 rounded-2xl shrink-0 mx-auto" />
-      <Skeleton className="h-10 w-44 rounded-lg mx-auto" />
-      <div className="flex flex-col gap-3 w-full">
-        <Skeleton className="h-4 w-full rounded" />
-        <Skeleton className="h-4 w-5/6 rounded" />
-        <Skeleton className="h-4 w-3/4 rounded" />
-      </div>
-    </Card>
-  );
-}
+export { AboutCardSkeleton };
 
 export async function AboutCard() {
   const about = await getAbout();
@@ -38,15 +27,16 @@ export async function AboutCard() {
         </div>
       )}
 
-      <h1 className="text-purple text-center w-full">About Me</h1>
+      <h1 className="text-purple text-center w-full">
+        {siteConfig.fallbacks.about.title}
+      </h1>
 
       <div className="flex flex-col gap-4 text-left w-full">
         {about?.description ? (
           <PortableText value={about.description} />
         ) : (
           <p>
-            {about?.plainText ||
-              "Software engineer driven by curiosity and first principles, solving complex problems across diverse domains."}
+            {about?.plainText || siteConfig.fallbacks.about.fallbackBio}
           </p>
         )}
       </div>

@@ -88,7 +88,15 @@ export const siteConfig = {
   title: "Bhavya Jain | Software Engineer",
   description:
     "Portfolio of Bhavya Jain — Software Engineer driven by curiosity and first principles, solving complex problems across diverse domains.",
+  copyrightYear: 2026,
   navItems: NAV_ITEMS,
+  fallbacks: {
+    about: {
+      title: "About Me",
+      fallbackBio:
+        "Software engineer driven by curiosity and first principles, solving complex problems across diverse domains.",
+    },
+  },
 } as const;
 
 /**

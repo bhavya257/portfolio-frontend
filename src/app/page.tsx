@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { AboutCard, AboutCardSkeleton } from "@/components/cards/AboutCard";
+import { AboutCard, AboutCardSkeleton } from "@/components/cards/about";
 
 export default function Home() {
   return (

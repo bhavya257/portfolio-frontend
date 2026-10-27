@@ -1,6 +1,15 @@
 "use client";
 
-import * as React from "react";
+import {
+  isValidElement,
+  type ComponentPropsWithoutRef,
+  type ComponentType,
+  type MouseEvent,
+  type MouseEventHandler,
+  type PointerEvent,
+  type PointerEventHandler,
+  type ReactNode,
+} from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Slot } from "@radix-ui/react-slot";
@@ -51,9 +60,9 @@ export interface ButtonProps
   isActive?: boolean;
   sweep?: boolean;
   sweepClassName?: string;
-  iconStart?: LucideIcon | React.ReactNode;
-  iconEnd?: LucideIcon | React.ReactNode;
-  children?: React.ReactNode;
+  iconStart?: LucideIcon | ReactNode;
+  iconEnd?: LucideIcon | ReactNode;
+  children?: ReactNode;
 }
 
 export function Button({
@@ -77,19 +86,19 @@ export function Button({
 }: ButtonProps) {
   const router = useRouter();
 
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
+  const handleClick = (e: MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
     if (disabled) return;
     if (haptic) {
       triggerTick();
     }
-    onClick?.(e as React.MouseEvent<HTMLButtonElement>);
+    onClick?.(e as MouseEvent<HTMLButtonElement>);
   };
 
-  const handlePointerEnter = (e: React.PointerEvent<HTMLButtonElement | HTMLAnchorElement>) => {
+  const handlePointerEnter = (e: PointerEvent<HTMLButtonElement | HTMLAnchorElement>) => {
     if (href && prefetch) {
       router.prefetch(href);
     }
-    props.onPointerEnter?.(e as React.PointerEvent<HTMLButtonElement>);
+    props.onPointerEnter?.(e as PointerEvent<HTMLButtonElement>);
   };
 
   const isIconOnly = size === "icon" || size === "iconSm" || size === "iconLg";
@@ -100,12 +109,12 @@ export function Button({
         ? 26
         : 22;
 
-  const renderIcon = (icon: LucideIcon | React.ReactNode) => {
+  const renderIcon = (icon: LucideIcon | ReactNode) => {
     if (!icon) return null;
-    if (React.isValidElement(icon)) {
+    if (isValidElement(icon)) {
       return icon;
     }
-    const IconComp = icon as React.ComponentType<{
+    const IconComp = icon as ComponentType<{
       size?: number;
       strokeWidth?: number;
       className?: string;
@@ -132,8 +141,8 @@ export function Button({
           buttonVariants({ variant, size, className }),
           isActive && "ring-2 ring-white ring-offset-2 ring-offset-[var(--color-black)] scale-105 brightness-110"
         )}
-        onClick={handleClick as unknown as React.MouseEventHandler<HTMLElement>}
-        {...(props as unknown as React.ComponentPropsWithoutRef<typeof Slot>)}
+        onClick={handleClick as unknown as MouseEventHandler<HTMLElement>}
+        {...(props as unknown as ComponentPropsWithoutRef<typeof Slot>)}
       >
         {children}
       </Slot>
@@ -170,8 +179,8 @@ export function Button({
     return (
       <MotionLink
         href={href}
-        onClick={handleClick as unknown as React.MouseEventHandler<HTMLAnchorElement>}
-        onPointerEnter={handlePointerEnter as unknown as React.PointerEventHandler<HTMLAnchorElement>}
+        onClick={handleClick as unknown as MouseEventHandler<HTMLAnchorElement>}
+        onPointerEnter={handlePointerEnter as unknown as PointerEventHandler<HTMLAnchorElement>}
         whileHover={!disabled ? { scale: 1.04 } : undefined}
         whileTap={!disabled ? { scale: 0.92, filter: "brightness(0.75)" } : undefined}
         transition={{ duration: 0.09, ease: [0.2, 0, 0, 1] }}

@@ -1,17 +1,12 @@
-import { TileShowcase } from "@/components/ui/TileShowcase";
-import { getAbout } from "@/sanity";
+import { Suspense } from "react";
+import { AboutCard, AboutCardSkeleton } from "@/components/cards/AboutCard";
 
-export default async function Home() {
-    const about = await getAbout();
-    return (
-        <div className="font-sans flex flex-col items-center justify-center p-8 sm:p-20 gap-12 max-w-xl mx-auto">
-            <TileShowcase />
-            <p className="text-zinc-300 leading-relaxed text-center sm:text-left">
-                {about?.plainText || "Software developer driven by curiosity and first principles, solving complex problems across diverse domains."}
-            </p>
-            <footer className="text-sm opacity-60 text-center">
-                Bhavya Jain | 2026
-            </footer>
-        </div>
-    );
+export default function Home() {
+  return (
+    <div className="w-full max-w-xl mx-auto p-0 sm:py-8 sm:px-4 flex flex-col items-start">
+      <Suspense fallback={<AboutCardSkeleton />}>
+        <AboutCard />
+      </Suspense>
+    </div>
+  );
 }

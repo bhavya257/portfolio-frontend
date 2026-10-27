@@ -1,169 +1,61 @@
-import type { ImageContent, SanityImageAssetReference } from './sanity.types'
+import { createImageUrlBuilder, type SanityImageSource } from '@sanity/image-url'
+import { getImageDimensions as getDimensions } from '@sanity/asset-utils'
 
-export type SanityImageSource =
-  | ImageContent
-  | SanityImageAssetReference
-  | { _ref?: string; _id?: string; url?: string; asset?: { _ref?: string; _id?: string; url?: string } }
-  | string
-  | undefined
+const projectId = process.env.SANITY_API_PROJECT_ID
+const dataset = process.env.SANITY_API_DATASET
+
+export const imageBuilder = projectId && dataset
+  ? createImageUrlBuilder({ projectId, dataset })
+  : null
+
+export type { SanityImageSource }
 
 export interface ImageTransformOptions {
   width?: number
   height?: number
+  square?: boolean
   quality?: number
-  format?: 'webp' | 'avif' | 'jpg' | 'png'
-  fit?: 'clip' | 'crop' | 'fill' | 'fillmax' | 'max' | 'scale' | 'min'
-  direct?: boolean // If true, returns direct cdn.sanity.io url instead of /media rewrite
 }
-
-export interface ImageDimensions {
-  width: number
-  height: number
-  aspectRatio: number
-}
-
-export interface ParsedSanityImage {
-  assetId?: string
-  dimensions?: ImageDimensions
-  format?: string
-  filename?: string
-}
-
-const SANITY_IMAGE_PATTERN = /^image-([a-f0-9]+)-(\d+x\d+)-([a-z0-9]+)$/
 
 /**
- * Extracts the asset reference string, ID, or URL from various source formats.
+ * Returns an ImageUrlBuilder for fluent chaining.
  */
-function extractRef(source: SanityImageSource): string | undefined {
-  if (!source) return undefined
-  if (typeof source === 'string') return source
-
-  if ('asset' in source && source.asset) {
-    const asset = source.asset as Record<string, unknown>
-    return (asset._ref as string) || (asset._id as string) || (asset.url as string) || undefined
-  }
-
-  if ('_ref' in source && source._ref) return source._ref
-  if ('_id' in source && source._id) return source._id
-  if ('url' in source && source.url) return source.url
-
-  return undefined
+export function urlFor(source: SanityImageSource) {
+  if (!imageBuilder || !source) return null
+  return imageBuilder.image(source).auto('format')
 }
 
 /**
- * Calculates dimensions and aspect ratio.
- */
-function createDimensions(width: number, height: number): ImageDimensions {
-  return {
-    width,
-    height,
-    aspectRatio: width / height,
-  }
-}
-
-/**
- * Parses direct CDN URLs (e.g. https://cdn.sanity.io/images/.../assetId-1200x800.jpg).
- */
-function parseCdnUrl(url: string): ParsedSanityImage {
-  const parts = url.split('/')
-  const filename = parts[parts.length - 1]
-  const [name, format] = filename.split('.')
-  const dimMatch = name.match(/-(\d+)x(\d+)$/)
-
-  if (!dimMatch) {
-    return { filename }
-  }
-
-  const width = parseInt(dimMatch[1], 10)
-  const height = parseInt(dimMatch[2], 10)
-
-  return {
-    dimensions: createDimensions(width, height),
-    format,
-    filename,
-  }
-}
-
-/**
- * Parses standard Sanity asset reference identifiers (e.g. image-assetId-1200x800-jpg).
- */
-function parseAssetPattern(ref: string): ParsedSanityImage {
-  const match = ref.match(SANITY_IMAGE_PATTERN)
-  if (!match) return {}
-
-  const [, assetId, dimensionsStr, format] = match
-  const [widthStr, heightStr] = dimensionsStr.split('x')
-  const width = parseInt(widthStr, 10)
-  const height = parseInt(heightStr, 10)
-  const filename = `${assetId}-${width}x${height}.${format}`
-
-  return {
-    assetId,
-    dimensions: createDimensions(width, height),
-    format,
-    filename,
-  }
-}
-
-/**
- * Extracts dimensions and asset path from a Sanity image object or asset ref.
- */
-export function parseSanityImage(source: SanityImageSource): ParsedSanityImage {
-  const ref = extractRef(source)
-  if (!ref) return {}
-
-  if (ref.includes('cdn.sanity.io/images/')) {
-    return parseCdnUrl(ref)
-  }
-
-  return parseAssetPattern(ref)
-}
-
-/**
- * Serializes image transformation options into a URL query string.
- */
-function buildTransformQuery(options: ImageTransformOptions): string {
-  const params = new URLSearchParams()
-  if (options.width) params.set('w', options.width.toString())
-  if (options.height) params.set('h', options.height.toString())
-  if (options.quality) params.set('q', options.quality.toString())
-  if (options.fit) params.set('fit', options.fit)
-  params.set('auto', 'format')
-
-  const query = params.toString()
-  return query ? `?${query}` : ''
-}
-
-/**
- * Resolves either the direct Sanity CDN URL or the local rewrite endpoint.
- */
-function resolveImageUrl(
-  filename: string,
-  queryString: string,
-  direct?: boolean
-): string | null {
-  if (direct) {
-    const projectId = process.env.SANITY_API_PROJECT_ID
-    const dataset = process.env.SANITY_API_DATASET
-    if (!projectId || !dataset) return null
-
-    return `https://cdn.sanity.io/images/${projectId}/${dataset}/${filename}${queryString}`
-  }
-
-  return `/media/${filename}${queryString}`
-}
-
-/**
- * Builds a relative /media URL (or direct CDN URL) for Sanity images.
- * Keeps media requests routed through the Next.js rewrite according to stack decisions.
+ * Resolves a Sanity image source to an optimized CDN URL string.
  */
 export function urlForImage(
   source: SanityImageSource,
   options: ImageTransformOptions = {}
 ): string | null {
-  const { filename } = parseSanityImage(source)
-  if (!filename) return null
+  const builder = urlFor(source)
+  if (!builder) return null
 
-  const queryString = buildTransformQuery(options)
-  return resolveImageUrl(filename, queryString, options.direct)
+  if (options.square) {
+    const size = options.width || options.height || 500
+    return builder.width(size).height(size).fit('crop').url()
+  }
+
+  let instance = builder
+  if (options.width) instance = instance.width(options.width)
+  if (options.height) instance = instance.height(options.height)
+  if (options.quality) instance = instance.quality(options.quality)
+
+  return instance.url()
+}
+
+/**
+ * Safely extracts image dimensions using Sanity's official @sanity/asset-utils.
+ */
+export function getImageDimensions(source: SanityImageSource | null | undefined) {
+  if (!source) return undefined
+  try {
+    return getDimensions(source as Parameters<typeof getDimensions>[0])
+  } catch {
+    return undefined
+  }
 }

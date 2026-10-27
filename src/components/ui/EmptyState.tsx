@@ -30,12 +30,12 @@ export function EmptyState({
           size={36}
           strokeWidth={2}
           aria-hidden="true"
-          className="text-neutral-500 mb-1"
+          className="opacity-40 mb-1"
         />
       )}
-      <h3 className="text-lg font-semibold text-white">{title}</h3>
+      <h3>{title}</h3>
       {description && (
-        <p className="text-sm text-neutral-400 max-w-sm leading-relaxed">
+        <p className="max-w-sm opacity-60">
           {description}
         </p>
       )}

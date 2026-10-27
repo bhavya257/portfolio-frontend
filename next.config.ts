@@ -4,6 +4,14 @@ const projectId = process.env.SANITY_API_PROJECT_ID;
 const dataset = process.env.SANITY_API_DATASET;
 
 const nextConfig: NextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "cdn.sanity.io",
+      },
+    ],
+  },
   async rewrites() {
     return [
       {

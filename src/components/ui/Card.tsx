@@ -22,7 +22,7 @@ export function CardHeader({ className, ...props }: React.ComponentProps<"div">)
 export function CardTitle({ className, ...props }: React.ComponentProps<"h3">) {
   return (
     <h3
-      className={cn("text-xl font-bold tracking-tight text-white", className)}
+      className={cn(className)}
       {...props}
     />
   );
@@ -31,7 +31,7 @@ export function CardTitle({ className, ...props }: React.ComponentProps<"h3">) {
 export function CardDescription({ className, ...props }: React.ComponentProps<"p">) {
   return (
     <p
-      className={cn("text-sm text-neutral-300 leading-relaxed", className)}
+      className={cn("opacity-70", className)}
       {...props}
     />
   );

@@ -108,7 +108,7 @@ export function MenuDialog({ isOpen, onClose, className }: MenuDialogProps) {
                       underline
                       sweepClassName={item.sweepClass}
                       className={cn(
-                        "pointer-events-none text-2xl uppercase",
+                        "pointer-events-none",
                         active ? item.textClass : "text-white"
                       )}
                       tabIndex={-1}

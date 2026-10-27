@@ -42,6 +42,8 @@ export interface ButtonProps
   extends Omit<HTMLMotionProps<"button">, "children">,
     VariantProps<typeof buttonVariants> {
   href?: string;
+  target?: string;
+  rel?: string;
   prefetch?: boolean;
   underline?: boolean;
   asChild?: boolean;
@@ -49,8 +51,8 @@ export interface ButtonProps
   isActive?: boolean;
   sweep?: boolean;
   sweepClassName?: string;
-  iconStart?: LucideIcon;
-  iconEnd?: LucideIcon;
+  iconStart?: LucideIcon | React.ReactNode;
+  iconEnd?: LucideIcon | React.ReactNode;
   children?: React.ReactNode;
 }
 
@@ -66,8 +68,8 @@ export function Button({
   isActive = false,
   sweep,
   sweepClassName,
-  iconStart: IconStart,
-  iconEnd: IconEnd,
+  iconStart,
+  iconEnd,
   onClick,
   disabled,
   children,
@@ -97,6 +99,27 @@ export function Button({
       : size === "iconLg" || size === "lg"
         ? 26
         : 22;
+
+  const renderIcon = (icon: LucideIcon | React.ReactNode) => {
+    if (!icon) return null;
+    if (React.isValidElement(icon)) {
+      return icon;
+    }
+    const IconComp = icon as React.ComponentType<{
+      size?: number;
+      strokeWidth?: number;
+      className?: string;
+      "aria-hidden"?: boolean | "true" | "false";
+    }>;
+    return (
+      <IconComp
+        size={iconSize}
+        strokeWidth={2.5}
+        aria-hidden="true"
+        className="shrink-0"
+      />
+    );
+  };
 
   const shouldSweep = sweep ?? (variant === "outline" || variant === "plain" || variant === "solid");
   const defaultSweepColor = variant === "solid" ? "bg-black" : "bg-white";
@@ -136,23 +159,9 @@ export function Button({
           isIconOnly ? "" : "gap-2"
         )}
       >
-        {IconStart && (
-          <IconStart
-            size={iconSize}
-            strokeWidth={2.5}
-            aria-hidden="true"
-            className="shrink-0"
-          />
-        )}
+        {renderIcon(iconStart)}
         {children && (underline ? <u>{children}</u> : <b>{children}</b>)}
-        {IconEnd && (
-          <IconEnd
-            size={iconSize}
-            strokeWidth={2.5}
-            aria-hidden="true"
-            className="shrink-0"
-          />
-        )}
+        {renderIcon(iconEnd)}
       </span>
     </>
   );

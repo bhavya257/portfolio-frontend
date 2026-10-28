@@ -1,4 +1,5 @@
 import { defineQuery } from 'groq'
+import { IMAGE_FIELDS } from './image'
 
 export const JOBS_QUERY = defineQuery(`
   *[_type == "job"] | order(startDate desc) {
@@ -12,17 +13,7 @@ export const JOBS_QUERY = defineQuery(`
       imageType,
       iconName,
       logo {
-        alt,
-        crop,
-        hotspot,
-        asset-> {
-          _id,
-          url,
-          metadata {
-            dimensions,
-            lqip
-          }
-        }
+        ${IMAGE_FIELDS}
       }
     },
     startDate,
@@ -30,17 +21,7 @@ export const JOBS_QUERY = defineQuery(`
     customEndDate,
     description,
     images[] {
-      alt,
-      crop,
-      hotspot,
-      asset-> {
-        _id,
-        url,
-        metadata {
-          dimensions,
-          lqip
-        }
-      }
+      ${IMAGE_FIELDS}
     }
   }
 `)

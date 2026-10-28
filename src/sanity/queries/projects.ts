@@ -1,4 +1,5 @@
 import { defineQuery } from 'groq'
+import { IMAGE_FIELDS } from './image'
 
 export const PROJECTS_QUERY = defineQuery(`
   *[_type == "project"] | order(endDate desc, startDate desc) {
@@ -10,17 +11,7 @@ export const PROJECTS_QUERY = defineQuery(`
     summary,
     description,
     images[] {
-      alt,
-      crop,
-      hotspot,
-      asset-> {
-        _id,
-        url,
-        metadata {
-          dimensions,
-          lqip
-        }
-      }
+      ${IMAGE_FIELDS}
     },
     links[] {
       title,
@@ -28,17 +19,7 @@ export const PROJECTS_QUERY = defineQuery(`
       imageType,
       iconName,
       logo {
-        alt,
-        crop,
-        hotspot,
-        asset-> {
-          _id,
-          url,
-          metadata {
-            dimensions,
-            lqip
-          }
-        }
+        ${IMAGE_FIELDS}
       }
     },
     skills[]-> {
@@ -51,17 +32,7 @@ export const PROJECTS_QUERY = defineQuery(`
         imageType,
         iconName,
         logo {
-          alt,
-          crop,
-          hotspot,
-          asset-> {
-            _id,
-            url,
-            metadata {
-              dimensions,
-              lqip
-            }
-          }
+          ${IMAGE_FIELDS}
         }
       }
     }
@@ -78,17 +49,7 @@ export const PROJECTS_PREVIEW_QUERY = defineQuery(`
     summary,
     description,
     images[] {
-      alt,
-      crop,
-      hotspot,
-      asset-> {
-        _id,
-        url,
-        metadata {
-          dimensions,
-          lqip
-        }
-      }
+      ${IMAGE_FIELDS}
     },
     links[] {
       title,

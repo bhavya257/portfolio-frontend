@@ -1,4 +1,5 @@
 import { defineQuery } from 'groq'
+import { IMAGE_FIELDS } from './image'
 
 export const SKILL_GROUPS_QUERY = defineQuery(`
   *[_type == "skillGroup"] | order(title asc) {
@@ -16,17 +17,7 @@ export const SKILL_GROUPS_QUERY = defineQuery(`
         imageType,
         iconName,
         logo {
-          alt,
-          crop,
-          hotspot,
-          asset-> {
-            _id,
-            url,
-            metadata {
-              dimensions,
-              lqip
-            }
-          }
+          ${IMAGE_FIELDS}
         }
       }
     }
@@ -44,17 +35,7 @@ export const ALL_SKILLS_QUERY = defineQuery(`
       imageType,
       iconName,
       logo {
-        alt,
-        crop,
-        hotspot,
-        asset-> {
-          _id,
-          url,
-          metadata {
-            dimensions,
-            lqip
-          }
-        }
+        ${IMAGE_FIELDS}
       }
     }
   }

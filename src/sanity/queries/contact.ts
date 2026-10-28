@@ -1,4 +1,5 @@
 import { defineQuery } from 'groq'
+import { IMAGE_FIELDS } from './image'
 
 export const CONTACTS_QUERY = defineQuery(`
   *[_type == "contact"] | order(title asc) {
@@ -11,17 +12,7 @@ export const CONTACTS_QUERY = defineQuery(`
       imageType,
       iconName,
       logo {
-        alt,
-        crop,
-        hotspot,
-        asset-> {
-          _id,
-          url,
-          metadata {
-            dimensions,
-            lqip
-          }
-        }
+        ${IMAGE_FIELDS}
       }
     }
   }

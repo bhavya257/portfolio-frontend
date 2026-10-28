@@ -12,6 +12,7 @@ export async function AboutCard() {
 
   return (
     <Card className="w-full min-h-[calc(100dvh-var(--spacing-dock,5rem)-2rem)] sm:min-h-0 border-2 border-purple rounded-[2rem] p-6 sm:p-8 flex flex-col items-start gap-6">
+      {/* Avatar */}
       {about?.image && (
         <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-2xl overflow-hidden ring-2 ring-purple shadow-xl shrink-0 mx-auto">
           <SanityImage
@@ -27,11 +28,13 @@ export async function AboutCard() {
         </div>
       )}
 
+      {/* Title */}
       <h1 className="text-purple text-center w-full">
         {siteConfig.fallbacks.about.title}
       </h1>
 
-      <div className="flex flex-col gap-4 text-left w-full">
+      {/* Content */}
+      <div className="flex flex-col gap-4 text-left w-full [&_ul]:list-disc [&_ul]:pl-5 [&_li]:marker:text-purple">
         {about?.description ? (
           <PortableText value={about.description} />
         ) : (

@@ -5,7 +5,6 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Dock } from "@/components/layout/Dock";
 import { MenuDialog } from "@/components/layout/MenuDialog";
 import { Footer } from "@/components/layout/Footer";
-
 export interface SiteShellProps {
   children: React.ReactNode;
 }

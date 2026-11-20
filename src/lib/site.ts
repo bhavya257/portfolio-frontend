@@ -90,11 +90,22 @@ export const siteConfig = {
     "Portfolio of Bhavya Jain — Software Engineer driven by curiosity and first principles, solving complex problems across diverse domains.",
   copyrightYear: 2026,
   navItems: NAV_ITEMS,
-  fallbacks: {
+  sections: {
     about: {
       title: "About Me",
-      fallbackBio:
+    },
+    experience: {
+      title: "Experience",
+    },
+  },
+  fallbacks: {
+    about: {
+      bio:
         "Software engineer driven by curiosity and first principles, solving complex problems across diverse domains.",
+    },
+    experience: {
+      emptyTitle: "No experience entries yet",
+      emptyDescription: "Career history will appear here once published.",
     },
   },
 } as const;

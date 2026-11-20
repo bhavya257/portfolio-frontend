@@ -30,7 +30,7 @@ export async function AboutCard() {
 
       {/* Title */}
       <h1 className="text-purple text-center w-full">
-        {siteConfig.fallbacks.about.title}
+        {siteConfig.sections.about.title}
       </h1>
 
       {/* Content */}
@@ -39,7 +39,7 @@ export async function AboutCard() {
           <PortableText value={about.description} />
         ) : (
           <p>
-            {about?.plainText || siteConfig.fallbacks.about.fallbackBio}
+            {about?.plainText || siteConfig.fallbacks.about.bio}
           </p>
         )}
       </div>

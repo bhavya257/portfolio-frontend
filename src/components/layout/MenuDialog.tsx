@@ -1,11 +1,17 @@
 "use client";
 
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useMemo } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { NAV_ITEMS, isActiveRoute } from "@/lib/site";
 import { Button } from "@/components/ui/Button";
+import {
+  useDockSignal,
+  DOCK_PRIORITY,
+  type DockSignal,
+} from "@/components/layout/dock";
 import { triggerSnap, triggerTick } from "@/lib/haptics";
 import { cn } from "@/lib/cn";
 
@@ -23,6 +29,31 @@ export function MenuDialog({ isOpen, onClose, className }: MenuDialogProps) {
     triggerSnap();
     onClose();
   }, [onClose]);
+
+  const menuDockSignal = useMemo<DockSignal | null>(() => {
+    if (!isOpen) return null;
+
+    return {
+      mode: "menu",
+      items: [
+        {
+          id: "close-menu",
+          label: "Close navigation menu",
+          icon: X,
+          variant: "ghost",
+          haptic: "snap",
+          className: "text-white hover:text-white/80",
+        },
+      ],
+      onAction: (actionId: string) => {
+        if (actionId === "close-menu") {
+          onClose();
+        }
+      },
+    };
+  }, [isOpen, onClose]);
+
+  useDockSignal(menuDockSignal, DOCK_PRIORITY.MENU);
 
   useEffect(() => {
     if (!isOpen) return;

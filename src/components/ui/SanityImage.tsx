@@ -3,7 +3,6 @@ import {
   urlForImage,
   getImageDimensions,
   type SanityImageSource,
-  type ImageTransformOptions,
 } from "@/sanity/image";
 import { cn } from "@/lib/cn";
 
@@ -12,7 +11,6 @@ export interface SanityImageProps extends Omit<ImageProps, "src" | "alt"> {
   alt?: string | null;
   lqip?: string | null;
   square?: boolean;
-  options?: ImageTransformOptions;
 }
 
 export function SanityImage({
@@ -20,7 +18,6 @@ export function SanityImage({
   alt = "",
   lqip,
   square = false,
-  options,
   className,
   width,
   height,
@@ -28,9 +25,8 @@ export function SanityImage({
 }: SanityImageProps) {
   const src = urlForImage(image, {
     square,
-    ...(typeof width === "number" ? { width } : {}),
-    ...(typeof height === "number" ? { height } : {}),
-    ...options,
+    width: typeof width === "number" ? width : undefined,
+    height: typeof height === "number" ? height : undefined,
   });
 
   if (!src) return null;
@@ -45,6 +41,7 @@ export function SanityImage({
       height={props.fill ? undefined : (height ?? dimensions?.height)}
       placeholder={lqip ? "blur" : undefined}
       blurDataURL={lqip || undefined}
+      unoptimized
       className={cn("object-cover", className)}
       {...props}
     />

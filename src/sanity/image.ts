@@ -1,14 +1,29 @@
-import { createImageUrlBuilder, type SanityImageSource } from "@sanity/image-url";
 import { getImageDimensions as getDimensions } from "@sanity/asset-utils";
+import type { SanityImageCrop, SanityImageHotspot } from "./sanity.types";
+import {
+  getAssetId,
+  resolveImageFilename,
+  calculateCropRect,
+  calculateFocalPoint,
+  buildImageQueryParams,
+} from "./imageUtils";
 
-const projectId = process.env.SANITY_API_PROJECT_ID;
-const dataset = process.env.SANITY_API_DATASET;
-
-// Cached Sanity image builder instance
-export const imageBuilder =
-  projectId && dataset ? createImageUrlBuilder({ projectId, dataset }) : null;
-
-export type { SanityImageSource };
+export type SanityImageSource =
+  | string
+  | {
+      _id?: string;
+      _ref?: string;
+      asset?: {
+        _ref?: string;
+        _id?: string;
+        [key: string]: unknown;
+      } | null;
+      crop?: SanityImageCrop | null;
+      hotspot?: SanityImageHotspot | null;
+      [key: string]: unknown;
+    }
+  | null
+  | undefined;
 
 export interface ImageTransformOptions {
   width?: number;
@@ -18,44 +33,37 @@ export interface ImageTransformOptions {
 }
 
 /**
- * Returns a fluent Sanity ImageUrlBuilder configured with automatic modern format negotiation (WebP/AVIF).
+ * Resolves intrinsic image dimensions (width, height, aspectRatio) from a Sanity asset reference.
  */
-export function urlFor(source: SanityImageSource) {
-  if (!imageBuilder || !source) return null;
-  return imageBuilder.image(source).auto("format");
-}
-
-/**
- * Resolves a Sanity image asset into an optimized CDN URL string with optional sizing and quality transforms.
- */
-export function urlForImage(
-  source: SanityImageSource,
-  options: ImageTransformOptions = {}
-): string | null {
-  const builder = urlFor(source);
-  if (!builder) return null;
-
-  if (options.square) {
-    const size = options.width || options.height || 500;
-    return builder.width(size).height(size).fit("crop").url();
-  }
-
-  let image = builder;
-  if (options.width) image = image.width(options.width);
-  if (options.height) image = image.height(options.height);
-  if (options.quality) image = image.quality(options.quality);
-
-  return image.url();
-}
-
-/**
- * Extracts intrinsic dimensions (width, height, aspectRatio) from a Sanity asset reference to prevent layout shift.
- */
-export function getImageDimensions(source: SanityImageSource | null | undefined) {
+export function getImageDimensions(source: SanityImageSource) {
   if (!source) return undefined;
   try {
     return getDimensions(source as Parameters<typeof getDimensions>[0]);
   } catch {
     return undefined;
   }
+}
+
+/**
+ * Resolves a Sanity image asset into a server-proxied URL (/api/media/image/...)
+ * with dimension, crop, and format parameters applied directly.
+ */
+export function urlForImage(
+  source: SanityImageSource,
+  options: ImageTransformOptions = {}
+): string | null {
+  const assetId = getAssetId(source);
+  if (!assetId) return null;
+
+  const filename = resolveImageFilename(assetId);
+  if (!filename) return null;
+
+  const dimensions = getImageDimensions(source);
+  const crop = typeof source === "object" ? source?.crop : null;
+  const hotspot = typeof source === "object" ? source?.hotspot : null;
+  const cropRect = calculateCropRect(crop, dimensions);
+  const focalPoint = calculateFocalPoint(hotspot, crop);
+  const searchParams = buildImageQueryParams(options, cropRect, focalPoint);
+
+  return `/api/media/image/${filename}?${searchParams.toString()}`;
 }

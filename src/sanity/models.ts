@@ -7,6 +7,7 @@ import type {
   RESUME_QUERY_RESULT,
   SKILL_GROUPS_QUERY_RESULT,
 } from './sanity.types'
+import type { SanityImageSource } from './image'
 
 // Re-export all underlying generated types
 export * from './sanity.types'
@@ -30,3 +31,10 @@ export type ProjectLink = NonNullable<NonNullable<Project['links']>[number]>
 export type ProjectImage = NonNullable<NonNullable<Project['images']>[number]>
 export type JobImage = NonNullable<NonNullable<Job['images']>[number]>
 export type CompanyWebsite = Job['website']
+
+/**
+ * Gallery media types for UI image previews and lightboxes.
+ */
+export type GalleryImage = JobImage | ProjectImage
+export type GalleryItem = SanityImageSource | GalleryImage
+

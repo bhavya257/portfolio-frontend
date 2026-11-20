@@ -25,6 +25,7 @@ export function Dock({ className }: DockProps) {
 
   return (
     <nav
+      data-dock
       aria-label={resolvedOptions?.ariaLabel ?? "Mobile Dock"}
       className={cn(
         "fixed bottom-[calc(1.25rem+env(safe-area-inset-bottom,0px))] left-1/2 -translate-x-1/2 z-50 md:hidden",

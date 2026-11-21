@@ -41,6 +41,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 sanity.types.ts
+schema.json
 
 # IDE settings
 .idea

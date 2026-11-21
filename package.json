@@ -4,10 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
+    "prebuild": "npm run typegen",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "typegen": "sanity typegen generate"
+    "typegen": "node scripts/fetch-sanity-schema.mjs && sanity typegen generate"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
